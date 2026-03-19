@@ -223,7 +223,7 @@
             // --- Планировщик: ждёт случайную задержку (ускоренную в 3 раза) и запускает processNextLine ---
             function generateNextLine() {
                 // Новая задержка: от 60 до 120 мс (вместо 180–350)
-                const delay = Math.floor(Math.random() * 61) + 60; // 60–120 мс
+                const delay = Math.floor(Math.random() * 11) + 10; // 60–120 мс
                 setTimeout(processNextLine, delay);
             }
 
