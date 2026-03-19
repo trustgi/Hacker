@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>hacker terminal — ultra fast + редкая анимация</title>
+    <title>хакер-терминал 3000 + 50+ абсурдных мемов</title>
     <style>
         * {
             margin: 0;
@@ -36,16 +36,39 @@
             text-shadow: 0 0 3px #0f0;
             white-space: pre-wrap;
         }
+        #hack-message {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ff0000;
+            font-weight: 900;
+            font-size: clamp(2rem, 10vw, 5rem);
+            text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 0 0 20px #ff0000;
+            font-family: 'Impact', 'Arial Black', 'Courier New', sans-serif;
+            text-align: center;
+            white-space: nowrap;
+            z-index: 9999;
+            pointer-events: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: none;
+            max-width: 90vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     </style>
 </head>
 <body>
     <div id="output"></div>
+    <div id="hack-message"></div>
 
     <script>
         (function() {
             const output = document.getElementById('output');
+            const messageDiv = document.getElementById('hack-message');
 
-            // ----- генератор контента (такой же, как в предыдущих версиях) -----
+            // ----- генератор контента (зелёные строки) -----
             function randomGarbage() {
                 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{};:,.<>?/\\|`~';
                 const len = Math.floor(Math.random() * 55) + 15;
@@ -149,7 +172,7 @@
             }
 
             // ----- параметры потока -----
-            const MAX_LINES = 1000;          // увеличили, чтобы при бешеной скорости строки жили подольше
+            const MAX_LINES = 1000;
             let linesCount = 0;
 
             function removeOldestIfNeeded() {
@@ -163,30 +186,27 @@
                 window.scrollTo(0, document.body.scrollHeight);
             }
 
-            // ----- анимация печати по буквам (с защитой от удаления) -----
+            // ----- анимация печати по буквам -----
             function animateLine(text, container) {
                 let index = 0;
                 const total = text.length;
-                const stepDelay = Math.floor(Math.random() * 30) + 20; // 20–50 мс на символ
+                const stepDelay = Math.floor(Math.random() * 30) + 20;
 
                 function addChar() {
-                    // если элемент удалён из DOM – прекращаем анимацию
                     if (!container.parentNode) return;
-
                     if (index < total) {
                         container.textContent += text[index];
                         index++;
-                        scrollToBottom();               // прокручиваем при каждом символе
+                        scrollToBottom();
                         setTimeout(addChar, stepDelay);
                     }
-                    // else – анимация завершена, ничего не делаем
                 }
                 addChar();
             }
 
-            // ----- добавление одной строки (обычной или анимированной) -----
+            // ----- добавление одной строки -----
             function processNextLine() {
-                const useAnimation = Math.random() < 0.005;        // 0.5% – примерно 1 раз в 200 строк (интервал 100–300)
+                const useAnimation = Math.random() < 0.005;
                 const lineText = nextLine();
 
                 const lineDiv = document.createElement('div');
@@ -194,27 +214,142 @@
                 output.appendChild(lineDiv);
                 linesCount++;
 
-                removeOldestIfNeeded();   // если превышен лимит – удалим самые старые
+                removeOldestIfNeeded();
 
                 if (useAnimation) {
-                    lineDiv.textContent = '';          // начинаем с пустой строки
+                    lineDiv.textContent = '';
                     animateLine(lineText, lineDiv);
                 } else {
                     lineDiv.textContent = lineText;
-                    scrollToBottom();                   // обычная строка – прокрутка один раз
+                    scrollToBottom();
                 }
 
-                // Сразу планируем следующую строку (не ждём окончания анимации)
                 generateNextLine();
             }
 
-            // ----- планировщик: интервал 5–15 мс -----
+            // ----- планировщик строк (5–15 мс) -----
             function generateNextLine() {
-                const delay = Math.floor(Math.random() * 11) + 5;   // 5–15 мс
+                const delay = Math.floor(Math.random() * 11) + 5;
                 setTimeout(processNextLine, delay);
             }
 
-            // ----- быстрое предзаполнение (20 строк, чтобы не было пусто) -----
+            // ----- === ТУПЫЕ И АБСУРДНЫЕ МЕМЫ, 50+ ШТУК === -----
+            const memes = [
+                "сбербанк много денег",
+                "гамлет))",
+                "скочать гта 6",
+                "халява приди",
+                "кряк на фотошоп",
+                "бабушка в танке",
+                "админ сосёт",
+                "питон удав",
+                "майнкрафт бесплатно",
+                "читер читер",
+                "порошок сдачи",
+                "инстаграм директ",
+                "топ кек",
+                "лол кек чебурек",
+                "котлета с пюрешкой",
+                "взлом пентагона",
+                "роблокс робуксы",
+                "дотер страдает",
+                "катка лёгкая",
+                "босс казино",
+                "бабло побеждает зло",
+                "сосиска в тесте",
+                "хайп ловец",
+                "биткоин упал",
+                "эфир взлетел",
+                "мемы с котами",
+                "крипово",
+                "жиза",
+                "краш на училку",
+                "тюбик 2026",
+                "скуф",
+                "нормис",
+                "дед инсайд",
+                "альтушка",
+                "кринж",
+                "рофл",
+                "испанский стыд",
+                "схемы успеха",
+                "курсы по сливу",
+                "фейк ньюс",
+                "водка с икрой",
+                "балалайка",
+                "медведь баян",
+                "шаурма",
+                "чебурек",
+                "пицца с ананасами",
+                "лучший друг девелопера",
+                "индус код",
+                "дип фейк",
+                "нейросеть пишет диплом",
+                "чат джпт сломался",
+                "синий кит",
+                "бэтмен возвращается",
+                "супермен в тюрьме",
+                "шрек болото",
+                "фиона прекрасная",
+                "осел ржет",
+                "кот в сапогах стреляет",
+                "пираты карибского моря",
+                "джек воробей",
+                "барон мюнхгаузен",
+                "колобок повесился",
+                "репка репка",
+                "курочка ряба снесла золотой ключ",
+                "вини пух и пчёлы",
+                "пятачок атакует",
+                "совунья бабка",
+                "копатыч фермер",
+                "лосяш учёный",
+                "кар карыч",
+                "крош шуруп",
+                "ёжик в тумане",
+                "волк из ну погоди",
+                "заяц в полосочку",
+                "кот леопольд выпей йаду",
+                "том и джерри свадьба",
+                "микки маус под следствием",
+                "дональд дак в долгах",
+                "скрудж макдак купается в деньгах",
+                "гомер симпсон пончик",
+                "барт симпсон рогатка",
+                "лиса алиса и кот базилио",
+                "буратино дурачок",
+                "карабас барабас бандит",
+                "артемон кудлатый",
+                "пьеро нытик",
+                "мальвина инстаграм",
+                "дуремар пиявки",
+                "черепаха тортилла спортсменка",
+                "старуха шапокляк",
+                "крыса лариска",
+                "крокодил гена зелёный",
+                "чебурашка апельсин",
+                "старуха шапокляк рэп",
+                "почтальон печкин с велосипедом",
+                "кот матроскин бизнесмен",
+                "шарик фоторужьё",
+                "дядя фёдор малолетний"
+            ];
+
+            function showRandomMessage() {
+                const text = memes[Math.floor(Math.random() * memes.length)];
+                messageDiv.textContent = text;
+                messageDiv.style.display = 'block';
+
+                const duration = Math.floor(Math.random() * 2000) + 1000; // 1000–3000 мс
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, duration);
+
+                const nextInterval = Math.floor(Math.random() * 4000) + 8000; // 8–12 сек
+                setTimeout(showRandomMessage, nextInterval);
+            }
+
+            // ----- предзаполнение -----
             for (let i = 0; i < 20; i++) {
                 const lineDiv = document.createElement('div');
                 lineDiv.className = 'line';
@@ -224,8 +359,8 @@
             }
             scrollToBottom();
 
-            // Запускаем бесконечный цикл добавления
             generateNextLine();
+            setTimeout(showRandomMessage, Math.floor(Math.random() * 4000) + 2000);
         })();
     </script>
 </body>
