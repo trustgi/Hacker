@@ -50,7 +50,7 @@
             // --- генерация строк (та же, что и раньше) ---
             function randomGarbage() {
                 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{};:,.<>?/\\|`~';
-                const len = Math.floor(Math.random() * 55) + 15;
+                const len = Math.floor(Math.random() * 5) + 5;
                 let out = '';
                 for (let i = 0; i < len; i++) {
                     out += chars[Math.floor(Math.random() * chars.length)];
