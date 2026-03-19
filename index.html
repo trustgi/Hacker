@@ -1,31 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>хакер-терминал 3000 + 50+ абсурдных мемов</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>purry onlyfans forno</title>
     <style>
+        /* Сброс стандартных отступов */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         html, body {
             width: 100%;
-            min-height: 100vh;
+            height: 100%;
             background: #000;
             color: #0f0;
             font-family: 'Courier New', Courier, monospace;
             font-size: 1.1rem;
-            line-height: 1.3;
+            line-height: 1.3rem;
             word-break: break-word;
             white-space: pre-wrap;
-            overflow-x: hidden;
+            overflow: hidden;
+            position: relative;
         }
+
+        /* Контейнер для текста — растягиваем на весь экран */
         #output {
-            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            padding: 0.8rem;
+            height: 100%;
+            z-index: 2;
+            padding: 0rem 0rem 2rem 0rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
         }
+
+        /* Обертка для строк, чтобы они не растягивались */
+        .lines-wrapper {
+            width: 100%;
+        }
+
         .line {
             display: block;
             color: #0f0;
@@ -36,39 +56,96 @@
             text-shadow: 0 0 3px #0f0;
             white-space: pre-wrap;
         }
+
+        /* Слой для фоновых картинок */
+        #background-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+            opacity: 0;
+            will-change: opacity;
+        }
+
+        /* Мемное сообщение по центру — УВЕЛИЧЕНО */
         #hack-message {
             position: fixed;
-            top: 10px;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, -50%);
             color: #ff0000;
             font-weight: 900;
-            font-size: clamp(2rem, 10vw, 5rem);
-            text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 0 0 20px #ff0000;
+            font-size: clamp(3rem, 12vw, 8rem);
+            text-shadow: 4px 4px 0 #000, -4px -4px 0 #000, 4px -4px 0 #000, -4px 4px 0 #000, 0 0 40px #ff0000;
             font-family: 'Impact', 'Arial Black', 'Courier New', sans-serif;
             text-align: center;
             white-space: nowrap;
-            z-index: 9999;
+            max-width: 100%;
+            width: max-content;
+            z-index: 1000;
             pointer-events: none;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 4px;
             display: none;
-            max-width: 90vw;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            opacity: 1;
+            overflow: visible;
+            padding: 0 0.5rem;
         }
     </style>
 </head>
 <body>
-    <div id="output"></div>
+    <div id="background-layer"></div>
+    <div id="output">
+        <div class="lines-wrapper" id="lines-wrapper"></div>
+    </div>
     <div id="hack-message"></div>
 
     <script>
         (function() {
-            const output = document.getElementById('output');
+            const linesWrapper = document.getElementById('lines-wrapper');
             const messageDiv = document.getElementById('hack-message');
+            const bgLayer = document.getElementById('background-layer');
+            const output = document.getElementById('output');
 
-            // ----- генератор контента (зелёные строки) -----
+            // ----- Состояние потока (активность) -----
+            let active = false;             // разрешена ли генерация нового контента
+            let isAnimationActive = false;  // флаг для побуквенной анимации (внутренний)
+
+            // ----- Централизованное управление таймерами -----
+            const timers = [];
+
+            function safeSetTimeout(fn, delay) {
+                const id = setTimeout(() => {
+                    // удаляем выполнившийся таймер из списка
+                    const index = timers.indexOf(id);
+                    if (index > -1) timers.splice(index, 1);
+                    fn();
+                }, delay);
+                timers.push(id);
+                return id;
+            }
+
+            function clearAllTimers() {
+                for (let id of timers) {
+                    clearTimeout(id);
+                }
+                timers.length = 0;
+            }
+
+            // ----- Генератор случайного мусора -----
             function randomGarbage() {
                 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{};:,.<>?/\\|`~';
                 const len = Math.floor(Math.random() * 55) + 15;
@@ -79,6 +156,7 @@
                 return out;
             }
 
+            // ----- Массив хакерских строк (полный) -----
             const hackLines = [
                 "> sudo nmap -sS -O 192.168.1.0/24",
                 "Starting Nmap 7.94 ( https://nmap.org )",
@@ -118,7 +196,7 @@
                 "[*] Connecting to 10.0.0.45:4444",
                 "[+] Connection established",
                 "[*] Sending payload (876 bytes)",
-                "[+] Shell obtained on port 31337",
+                "[+] Shell obtained on port 31337 сиски",
                 "# whoami",
                 "root",
                 "# cat /etc/shadow | grep root",
@@ -171,196 +249,264 @@
                 }
             }
 
-            // ----- параметры потока -----
+            // ----- Управление количеством строк -----
             const MAX_LINES = 1000;
             let linesCount = 0;
 
             function removeOldestIfNeeded() {
-                while (linesCount > MAX_LINES) {
-                    output.removeChild(output.firstChild);
+                while (linesCount > MAX_LINES && linesWrapper.firstChild) {
+                    linesWrapper.removeChild(linesWrapper.firstChild);
                     linesCount--;
                 }
             }
 
             function scrollToBottom() {
-                window.scrollTo(0, document.body.scrollHeight);
+                output.scrollTop = output.scrollHeight;
             }
 
-            // ----- анимация печати по буквам -----
-            function animateLine(text, container) {
+            // ----- Анимация печати (с поддержкой остановки) -----
+            function animateLine(text, container, onComplete) {
+                isAnimationActive = true;
                 let index = 0;
                 const total = text.length;
                 const stepDelay = Math.floor(Math.random() * 30) + 20;
 
                 function addChar() {
-                    if (!container.parentNode) return;
+                    // Если активность остановлена – прерываем анимацию
+                    if (!active || !container.parentNode) {
+                        isAnimationActive = false;
+                        if (onComplete) onComplete();
+                        return;
+                    }
                     if (index < total) {
                         container.textContent += text[index];
                         index++;
                         scrollToBottom();
                         setTimeout(addChar, stepDelay);
+                    } else {
+                        isAnimationActive = false;
+                        if (onComplete) onComplete();
                     }
                 }
                 addChar();
             }
 
-            // ----- добавление одной строки -----
+            // ----- Добавление строки (processNextLine) -----
             function processNextLine() {
+                if (!active) return;
+                if (isAnimationActive) {
+                    safeSetTimeout(processNextLine, 100);
+                    return;
+                }
+
                 const useAnimation = Math.random() < 0.005;
                 const lineText = nextLine();
 
                 const lineDiv = document.createElement('div');
                 lineDiv.className = 'line';
-                output.appendChild(lineDiv);
+                linesWrapper.appendChild(lineDiv);
                 linesCount++;
 
                 removeOldestIfNeeded();
 
                 if (useAnimation) {
                     lineDiv.textContent = '';
-                    animateLine(lineText, lineDiv);
+                    animateLine(lineText, lineDiv, function() {
+                        if (active) generateNextLine();
+                    });
                 } else {
                     lineDiv.textContent = lineText;
                     scrollToBottom();
+                    if (active) generateNextLine();
                 }
-
-                generateNextLine();
             }
 
-            // ----- планировщик строк (5–15 мс) -----
             function generateNextLine() {
+                if (!active) return;
+                if (isAnimationActive) {
+                    safeSetTimeout(generateNextLine, 50);
+                    return;
+                }
                 const delay = Math.floor(Math.random() * 11) + 5;
-                setTimeout(processNextLine, delay);
+                safeSetTimeout(processNextLine, delay);
             }
 
-            // ----- === ТУПЫЕ И АБСУРДНЫЕ МЕМЫ, 50+ ШТУК === -----
+            // ----- Мерцание (полное исчезновение/появление) -----
+            function startFlicker(element, durationMs) {
+                const endTime = Date.now() + durationMs;
+                let flickerTimeout;
+
+                function flicker() {
+                    if (Date.now() >= endTime) {
+                        element.style.opacity = 0;
+                        return;
+                    }
+                    const opacity = Math.random() < 0.5 ? 0 : 1;
+                    element.style.opacity = opacity;
+                    const nextDelay = Math.floor(Math.random() * 90) + 10; // 10–100 мс
+                    flickerTimeout = setTimeout(flicker, nextDelay);
+                }
+                flicker();
+
+                return function stopFlicker() {
+                    if (flickerTimeout) clearTimeout(flickerTimeout);
+                };
+            }
+
+            // ----- Массив мемов (полный) -----
             const memes = [
-                "сбербанк много денег",
-                "гамлет))",
-                "скочать гта 6",
-                "халява приди",
-                "кряк на фотошоп",
-                "бабушка в танке",
-                "админ сосёт",
-                "питон удав",
-                "майнкрафт бесплатно",
-                "читер читер",
-                "порошок сдачи",
-                "инстаграм директ",
-                "топ кек",
-                "лол кек чебурек",
-                "котлета с пюрешкой",
-                "взлом пентагона",
-                "роблокс робуксы",
-                "дотер страдает",
-                "катка лёгкая",
-                "босс казино",
-                "бабло побеждает зло",
-                "сосиска в тесте",
-                "хайп ловец",
-                "биткоин упал",
-                "эфир взлетел",
-                "мемы с котами",
-                "крипово",
-                "жиза",
-                "краш на училку",
-                "тюбик 2026",
-                "скуф",
-                "нормис",
-                "дед инсайд",
-                "альтушка",
-                "кринж",
-                "рофл",
-                "испанский стыд",
-                "схемы успеха",
-                "курсы по сливу",
-                "фейк ньюс",
-                "водка с икрой",
-                "балалайка",
-                "медведь баян",
-                "шаурма",
-                "чебурек",
-                "пицца с ананасами",
-                "лучший друг девелопера",
-                "индус код",
-                "дип фейк",
-                "нейросеть пишет диплом",
-                "чат джпт сломался",
-                "синий кит",
-                "бэтмен возвращается",
-                "супермен в тюрьме",
-                "шрек болото",
-                "фиона прекрасная",
-                "осел ржет",
-                "кот в сапогах стреляет",
-                "пираты карибского моря",
-                "джек воробей",
-                "барон мюнхгаузен",
-                "колобок повесился",
-                "репка репка",
-                "курочка ряба снесла золотой ключ",
-                "вини пух и пчёлы",
-                "пятачок атакует",
-                "совунья бабка",
-                "копатыч фермер",
-                "лосяш учёный",
-                "кар карыч",
-                "крош шуруп",
-                "ёжик в тумане",
-                "волк из ну погоди",
-                "заяц в полосочку",
-                "кот леопольд выпей йаду",
-                "том и джерри свадьба",
-                "микки маус под следствием",
-                "дональд дак в долгах",
-                "скрудж макдак купается в деньгах",
-                "гомер симпсон пончик",
-                "барт симпсон рогатка",
-                "лиса алиса и кот базилио",
-                "буратино дурачок",
-                "карабас барабас бандит",
-                "артемон кудлатый",
-                "пьеро нытик",
-                "мальвина инстаграм",
-                "дуремар пиявки",
-                "черепаха тортилла спортсменка",
-                "старуха шапокляк",
-                "крыса лариска",
-                "крокодил гена зелёный",
-                "чебурашка апельсин",
-                "старуха шапокляк рэп",
-                "почтальон печкин с велосипедом",
-                "кот матроскин бизнесмен",
-                "шарик фоторужьё",
-                "дядя фёдор малолетний"
+                "сбербанк много денег", "гамлет))", "скочать гта 6", "не ну это не сфоткать грех",
+                "кряк на мемы мелстрорй", "я до боев", "флеш рояль", "чекни дз",
+                "майнкрафт бесплатно", "#пользуюсьнейроситями", "порошок сдачи", "67",
+                "GAZAN POWER 99999%", "лол кек чебурек", "без матов", "взлом пентагона",
+                "сливы?", "+79142882888", "поверь мне брат", "ну этот как его там",
+                "vodolaz.exe", "так хлеб вкуснее ключа", "мурино never sleep...", "биткоин упал",
+                "что это", "мемы с котами", "z", "пирожок с сыном", "свага",
+                "вратарь плохо сыграл", "скуф", "нормис", "дед инсайд", "один банан...", "кринжж",
+                "иоиьииоиииьииоииоь", "<-- пицца по 100р", "по факту мы оба одеса", "и плесини добавь", "доктор оно опять",
+                "водка с икрой", "балалайка", "медведь баян", "шаурма", "моник на эпштейн",
+                "это была не прививка", "го выевыватся", "рофл язык", "джарвис где бургеры",
+                "нейросеть хак читы", "1487", "подписка на видео роблокс оформлна"
             ];
 
             function showRandomMessage() {
+                if (!active) return;
                 const text = memes[Math.floor(Math.random() * memes.length)];
                 messageDiv.textContent = text;
                 messageDiv.style.display = 'block';
+                messageDiv.style.opacity = 1;
 
-                const duration = Math.floor(Math.random() * 2000) + 1000; // 1000–3000 мс
-                setTimeout(() => {
+                const duration = Math.floor(Math.random() * 2000) + 1000; // 1–3 сек
+                const stopFlicker = startFlicker(messageDiv, duration);
+
+                safeSetTimeout(() => {
+                    stopFlicker();
                     messageDiv.style.display = 'none';
+                    messageDiv.style.opacity = 1;
                 }, duration);
 
-                const nextInterval = Math.floor(Math.random() * 4000) + 8000; // 8–12 сек
-                setTimeout(showRandomMessage, nextInterval);
+                const nextInterval = Math.floor(Math.random() * 4000) + 2000; // 8–12 сек
+                safeSetTimeout(showRandomMessage, nextInterval);
             }
 
-            // ----- предзаполнение -----
-            for (let i = 0; i < 20; i++) {
-                const lineDiv = document.createElement('div');
-                lineDiv.className = 'line';
-                lineDiv.textContent = nextLine();
-                output.appendChild(lineDiv);
-                linesCount++;
-            }
-            scrollToBottom();
+            // ----- Массив ссылок на картинки (полный, без битой) -----
+            const imageUrls = [
+                "https://celebbio.org/wp-content/cache/thumb/dc/5edac82a4af9ddc_400x400.jpg",
+                "https://ichef.bbci.co.uk/ace/ws/640/cpsprodpb/15CB2/production/_127466298_gettyimages-1210827855-170667a.jpg.webp",
+                "https://expert.ru/upload/resize_cache/iblock/73b/780_398_240cd750bba9870f18aada2478b24840a/0fhl3fuisf36ko5yn19hdq5vwwcq0o24.jpg",
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQr1py_VzeLO7EA-UmM5ZsTpm-aaum535W22g&s",
+                "https://images.meme-arsenal.com/85f7d8470bf86bb4c12008c4898f3610.jpg",
+                "https://img-webcalypt.ru/img/thumb/lg/35854/20262/WOphx1aSPhKj3Aw76qAvi8oetgInuAhJUq364ihaVeiLu365UG9zyXnWbr94yFme0VjmDPrMTMtjzTlXHCSbwzkKNP7HarEApxNhxVXNLyxTQXgakkgmamCEoQ5oMoAA.jpeg.jpg",
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqNXDjDjJuuTHZYsSt0rGrnlwbVZRbIiEh5A&s",
+                "https://cdn-image.zvuk.com/pic?hash=0ec042a7-ad5b-408f-9683-3b63d2499494&id=38520220&size=large&type=release",
+                "https://img-webcalypt.ru/storage/memes/28069/20251/nDGueFcLwtiswl990XCPAphW9q8RXS2fvgRCUqzF443jpvyx2N4SuISW0NQ4fQx1xeofsrEQe88bKpwfitQDn0BWi2RACEk6CesPj1dTTCFjUB0eirqdNq39WXxFk9CL.jpeg",
+                "https://icdn.lenta.ru/images/2025/02/18/13/20250218134620226/preview_e77d72571c5ae007ccba63acde0c4583.jpg",
+                "https://i.pinimg.com/736x/cb/68/38/cb6838bfdd6f05a410a61b8d920cb14e.jpg",
+                "https://i.pinimg.com/736x/95/ec/62/95ec624c5b83bbd1d091465f202b1729.jpg",
+                "https://i.pinimg.com/736x/45/55/c6/4555c6ef9fe06c2514bd3aebf12d8f16.jpg",
+                "https://i.pinimg.com/736x/7e/2b/2b/7e2b2bca4cca9b3449ae7ff871038d30.jpg",
+                "https://i.pinimg.com/736x/7c/50/72/7c50721f3548a158b0b48b6a57a2b0ef.jpg",
+                "https://i.pinimg.com/736x/a4/b2/1f/a4b21f861c23df2870fd3a175cb59672.jpg",
+                "https://i.pinimg.com/736x/90/70/3a/90703a559397034e08e9984b33b247e8.jpg",
+                "https://i.pinimg.com/736x/9f/3e/58/9f3e58ca7997b0045ef910b43621e3c9.jpg",
+                "https://i.pinimg.com/1200x/5d/12/fa/5d12fac187d1f880c20f1bc8df24bfbf.jpg",
+                "https://i.pinimg.com/736x/37/04/11/3704115cf0267e0765d83e2bc053a925.jpg",
+                "https://i.pinimg.com/736x/5e/cb/99/5ecb9941bb06a9c92e33119c0494cb53.jpg",
+                "https://i.pinimg.com/736x/3a/81/e8/3a81e8140fded8c9d3ed4c43b06fc256.jpg",
+                "https://i.pinimg.com/736x/fc/02/27/fc0227091e3b4f1f0d48df39dfd2f039.jpg",
+                "https://i.pinimg.com/736x/45/24/3a/45243a617aa61ace4cc4ae3f4236378f.jpg",
+                "https://i.pinimg.com/736x/c1/ce/23/c1ce231c8dee483f312d7e0bee0d6550.jpg",
+                "https://i.pinimg.com/736x/b2/6a/54/b26a54cc18b6069ae3a81e03d12938b7.jpg",
+                "https://i.pinimg.com/736x/18/17/1c/18171c093eb1b9294b9ed95be6e1fcb2.jpg",
+                "https://i.pinimg.com/736x/aa/2b/cf/aa2bcfb0a82a4272d75e96748ff94c11.jpg",
+                "https://i.pinimg.com/736x/d6/b2/6d/d6b26d774ba668c3ceff6c0474e42143.jpg",
+                "https://i.pinimg.com/736x/f1/33/8b/f1338b6c039882254904ab5cd8b7bd5b.jpg",
+                "https://i.pinimg.com/736x/b7/30/45/b7304559902a5a2be6067a6395ad4c5f.jpg",
+                "https://i.pinimg.com/736x/6f/a8/52/6fa8524dc8752134372a1072e379a1f0.jpg",
+                "https://i.pinimg.com/736x/90/06/a9/9006a910bf00fe1beb2ff1ed2644cb64.jpg",
+                "https://i.pinimg.com/1200x/19/4f/8f/194f8f9f74afd486e40b1ed4322e013d.jpg",
+                "https://i.pinimg.com/736x/a8/68/e2/a868e2a30f96714d5cb5a72980c8d6dc.jpg",
+                "https://i.pinimg.com/1200x/b5/58/a8/b558a87a50b49fe219b3a97aeb8e1f02.jpg",
+                "https://i.pinimg.com/736x/31/57/2e/31572e02fec155e032410049109baa8b.jpg",
+                "https://i.pinimg.com/736x/4d/a2/53/4da2531a38a9e5f043ee8bb54e2f1130.jpg",
+                "https://i.pinimg.com/736x/44/58/4c/44584c985605502f4b5b5f56a1bb188c.jpg",
+                "https://i.pinimg.com/736x/aa/d3/7c/aad37cedb6291270cb9acf7e14d45304.jpg",
+                "https://i.pinimg.com/736x/b8/e9/0a/b8e90a3af5d19da474a12a56fe5a1c41.jpg",
+                "https://i.pinimg.com/736x/99/d2/ea/99d2ea1acf23744e130905d8a0a825ca.jpg",
+                "https://i.pinimg.com/736x/b4/75/d4/b475d437f35a45ae90bb6be1da048c50.jpg",
+                "https://i.pinimg.com/736x/93/71/ab/9371abb3773d9f62b72b79c6a88a8712.jpg",
+                "https://i.pinimg.com/736x/1f/4c/38/1f4c380c21c04d10feb9184c915f5865.jpg",
+                "https://i.pinimg.com/736x/d1/8e/52/d18e5264788870112b3171999541d0ed.jpg",
+                "https://i.pinimg.com/736x/88/76/0d/88760d70a5c9f163d3f37f6cd0db4058.jpg",
+                "https://i.pinimg.com/736x/37/30/04/37300417bfeb0f3a091312749737f5d7.jpg",
+                "https://i.pinimg.com/736x/0f/b2/35/0fb2351265292e1ba961415aba8618e1.jpg",
+                "https://i.pinimg.com/736x/21/04/cc/2104cce52935ba1897c347d99c7d361c.jpg",
+            ];
 
-            generateNextLine();
-            setTimeout(showRandomMessage, Math.floor(Math.random() * 4000) + 2000);
+            function showRandomBackgroundImage() {
+                if (!active) return;
+                const imgUrl = imageUrls[Math.floor(Math.random() * imageUrls.length)];
+                const img = document.createElement('img');
+                img.src = imgUrl;
+                img.className = 'bg-image';
+                img.alt = '';
+
+                img.onerror = function() {
+                    if (img.parentNode) img.parentNode.removeChild(img);
+                };
+
+                bgLayer.appendChild(img);
+
+                img.onload = function() {
+                    if (!active) {
+                        if (img.parentNode) img.parentNode.removeChild(img);
+                        return;
+                    }
+                    const duration = Math.floor(Math.random() * 3000) + 2000; // 2–4 секунды
+                    const stopFlicker = startFlicker(img, duration);
+
+                    safeSetTimeout(() => {
+                        stopFlicker();
+                        if (img.parentNode) img.parentNode.removeChild(img);
+                    }, duration);
+                };
+
+                const nextInterval = Math.floor(Math.random() * 6000) + 3000; // 12–18 сек
+                safeSetTimeout(showRandomBackgroundImage, nextInterval);
+            }
+
+            // ----- Запуск активности (через 10 секунд) -----
+            function start() {
+                active = true;
+
+                // Начальное заполнение экрана (20 строк)
+                for (let i = 0; i < 20; i++) {
+                    const lineDiv = document.createElement('div');
+                    lineDiv.className = 'line';
+                    lineDiv.textContent = nextLine();
+                    linesWrapper.appendChild(lineDiv);
+                    linesCount++;
+                }
+                scrollToBottom();
+
+                // Запускаем бесконечную генерацию строк
+                generateNextLine();
+
+                // Запускаем мемные сообщения и фоновые картинки с небольшими задержками
+                safeSetTimeout(showRandomMessage, Math.floor(Math.random() * 4000) + 2000);
+                safeSetTimeout(showRandomBackgroundImage, Math.floor(Math.random() * 4000) + 3000);
+            }
+
+            // ----- Остановка активности (через 9999 секунд) -----
+            function stop() {
+                active = false;
+                clearAllTimers();
+                // Можно также очистить экран, если требуется, но по условию просто останавливаем генерацию
+            }
+
+            // ----- Планируем старт и стоп -----
+            safeSetTimeout(start, 5000);       // через 10 секунд
+            safeSetTimeout(stop, 9999000);       // через 9999 секунд (9999 * 1000)
         })();
     </script>
 </body>
