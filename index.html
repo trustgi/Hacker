@@ -1,9 +1,8 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>hacker terminal — быстрее и с анимацией</title>
+    <title>hacker terminal — ultra fast + редкая анимация</title>
     <style>
         * {
             margin: 0;
@@ -35,9 +34,8 @@
             padding: 0;
             opacity: 0.95;
             text-shadow: 0 0 3px #0f0;
-            white-space: pre-wrap; /* сохраняет пробелы при печати */
+            white-space: pre-wrap;
         }
-        /* мигающий курсор добавлять не будем — только текст */
     </style>
 </head>
 <body>
@@ -47,10 +45,10 @@
         (function() {
             const output = document.getElementById('output');
 
-            // --- генерация строк (та же, что и раньше) ---
+            // ----- генератор контента (такой же, как в предыдущих версиях) -----
             function randomGarbage() {
                 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{};:,.<>?/\\|`~';
-                const len = Math.floor(Math.random() * 5) + 5;
+                const len = Math.floor(Math.random() * 55) + 15;
                 let out = '';
                 for (let i = 0; i < len; i++) {
                     out += chars[Math.floor(Math.random() * chars.length)];
@@ -150,84 +148,73 @@
                 }
             }
 
-            // --- управление очередью строк и лимитом ---
-            const MAX_LINES = 240;
+            // ----- параметры потока -----
+            const MAX_LINES = 1000;          // увеличили, чтобы при бешеной скорости строки жили подольше
             let linesCount = 0;
 
-            // Удаляет самую старую строку, если превышен лимит
             function removeOldestIfNeeded() {
-                if (linesCount > MAX_LINES) {
+                while (linesCount > MAX_LINES) {
                     output.removeChild(output.firstChild);
                     linesCount--;
                 }
             }
 
-            // Прокрутка вниз
             function scrollToBottom() {
                 window.scrollTo(0, document.body.scrollHeight);
             }
 
-            // --- анимация печатания по буквам ---
+            // ----- анимация печати по буквам (с защитой от удаления) -----
             function animateLine(text, container) {
                 let index = 0;
                 const total = text.length;
-                // Можно варьировать скорость печати (от 20 до 50 мс на символ)
-                const stepDelay = Math.floor(Math.random() * 30) + 20; // 20–50 мс
+                const stepDelay = Math.floor(Math.random() * 30) + 20; // 20–50 мс на символ
 
                 function addChar() {
+                    // если элемент удалён из DOM – прекращаем анимацию
+                    if (!container.parentNode) return;
+
                     if (index < total) {
                         container.textContent += text[index];
                         index++;
-                        scrollToBottom(); // прокручиваем при каждом символе
+                        scrollToBottom();               // прокручиваем при каждом символе
                         setTimeout(addChar, stepDelay);
-                    } else {
-                        // Анимация завершена — запускаем следующую строку
-                        generateNextLine();
                     }
+                    // else – анимация завершена, ничего не делаем
                 }
                 addChar();
             }
 
-            // --- Основная функция: добавляет одну строку (с возможной анимацией) ---
+            // ----- добавление одной строки (обычной или анимированной) -----
             function processNextLine() {
-                // 10% случаев — анимация
-                const useAnimation = Math.random() < 0.1; // 0.1 = 10%
-
-                // Генерируем содержимое строки
+                const useAnimation = Math.random() < 0.005;        // 0.5% – примерно 1 раз в 200 строк (интервал 100–300)
                 const lineText = nextLine();
 
-                // Создаём элемент строки
                 const lineDiv = document.createElement('div');
                 lineDiv.className = 'line';
-
-                // Добавляем в DOM сразу (пустым или с текстом — зависит от анимации)
                 output.appendChild(lineDiv);
                 linesCount++;
 
-                // Удаляем старые строки, если нужно
-                removeOldestIfNeeded();
+                removeOldestIfNeeded();   // если превышен лимит – удалим самые старые
 
                 if (useAnimation) {
-                    // Анимированная печать: начинаем с пустой строки
-                    lineDiv.textContent = ''; // уже пусто, но на всякий случай
+                    lineDiv.textContent = '';          // начинаем с пустой строки
                     animateLine(lineText, lineDiv);
                 } else {
-                    // Обычная строка — целиком
                     lineDiv.textContent = lineText;
-                    scrollToBottom();
-                    // Сразу планируем следующую
-                    generateNextLine();
+                    scrollToBottom();                   // обычная строка – прокрутка один раз
                 }
+
+                // Сразу планируем следующую строку (не ждём окончания анимации)
+                generateNextLine();
             }
 
-            // --- Планировщик: ждёт случайную задержку (ускоренную в 3 раза) и запускает processNextLine ---
+            // ----- планировщик: интервал 5–15 мс -----
             function generateNextLine() {
-                // Новая задержка: от 60 до 120 мс (вместо 180–350)
-                const delay = Math.floor(Math.random() * 11) + 10; // 60–120 мс
+                const delay = Math.floor(Math.random() * 11) + 5;   // 5–15 мс
                 setTimeout(processNextLine, delay);
             }
 
-            // --- Предзаполнение экрана (20 строк для быстрого старта) ---
+            // ----- быстрое предзаполнение (20 строк, чтобы не было пусто) -----
             for (let i = 0; i < 20; i++) {
                 const lineDiv = document.createElement('div');
                 lineDiv.className = 'line';
@@ -236,10 +223,10 @@
                 linesCount++;
             }
             scrollToBottom();
+
             // Запускаем бесконечный цикл добавления
             generateNextLine();
         })();
     </script>
 </body>
 </html>
-```
